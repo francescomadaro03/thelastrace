@@ -206,13 +206,22 @@ app.post("/api/games/validate", checkLoggedIn, async (req, res) => {
 
 //GET api/events
 
-app.get("/api/events", checkLoggedIn, async (req, res) => {
+app.post("/api/events", checkLoggedIn, async (req, res) => {
   try {
     const numStations = req.query.numStations;
     const events = await getEvents();
 
+
+
+
     if (numStations) {
       const selectedEvents = generateRandomEvents(events, parseInt(numStations));
+      let score = 20;
+      selectedEvents.forEach((e) => {
+        score += e.bonus;
+        if (score < 0) score = 0;
+      });
+      await saveGame(req.user.username, score);
       return res.json(selectedEvents);
     }
 

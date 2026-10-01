@@ -17,7 +17,12 @@ export const getNetwork = async () => {
 export const getEvents = async (numStations) => {
   try {
     const url = numStations ? `${APIURL}/events?numStations=${numStations}` : `${APIURL}/events`;
-    const response = await fetch(url, { credentials: 'include' });
+    const response = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify({ numStations }),
+      credentials: 'include'
+    }
+    );
     if (!response.ok) {
       throw new Error(`Error fetching events: ${response.statusText}`);
     }
